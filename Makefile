@@ -5,7 +5,7 @@ test: es5
 	node tests/github-file-tests.js
 
 pushall:
-	git push origin master && npm publish
+	npm publish && git push origin master
 
 lint:
 	./node_modules/.bin/eslint .
