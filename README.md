@@ -30,7 +30,7 @@ Usage
       }
       else {
         console.log('File before updating': file.content);
-        githubFile.update('data/emoji.text', file.content + '😎', logResult);
+        githubFile.update({filePath: 'data/emoji.text', content: file.content + '😎'}, logResult);
       }
     }
 
