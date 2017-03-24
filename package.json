@@ -4,7 +4,8 @@
   "description": "A module for updating a file on GitHub via the GitHub API.",
   "main": "index.js",
   "scripts": {
-    "test": "make test"
+    "test": "make test",
+    "prepublish": "make es5"
   },
   "repository": {
     "type": "git",
