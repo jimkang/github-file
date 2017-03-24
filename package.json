@@ -1,6 +1,6 @@
 {
   "name": "github-file",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A module for updating a file on GitHub via the GitHub API.",
   "main": "index.js",
   "scripts": {
