@@ -1,5 +1,3 @@
-'use strict';
-
 var sb = require('standard-bail')();
 var waterfall = require('async-waterfall');
 var curry = require('lodash.curry');
@@ -29,7 +27,7 @@ function GitHubFile(ctorOpts) {
     decodeFromBase64 = ctorOpts.decodeFromBase64 || safeEncoders.decodeFromBase64;
   }
 
-  var urlBase = githubAPIBase + '/repos/' + gitRepoOwner + '/' + repo + '/contents';
+  const urlBase =  `${githubAPIBase}/repos/${gitRepoOwner}/${repo}/contents`;
 
   return {
     update: updateFile,
@@ -38,7 +36,7 @@ function GitHubFile(ctorOpts) {
 
   function getFile(filePath, done) {
     var reqOpts = {
-      url: urlBase + '/' + filePath + '?access_token=' + gitToken,
+      url: `${urlBase}/${filePath}?access_token=${gitToken}`,
       method: 'GET'
     };
     // console.log('Get from:', reqOpts.url);
@@ -66,11 +64,17 @@ function GitHubFile(ctorOpts) {
       message = opts.message;
     }
 
-    waterfall([curry(getFile)(filePath), commitUpdate], updateDone);
+    waterfall(
+      [
+        curry(getFile)(filePath),
+        commitUpdate
+      ],
+      updateDone
+    );
 
     function commitUpdate(existingFileInfo, done) {
       var reqOpts = {
-        url: urlBase + '/' + filePath + '?access_token=' + gitToken,
+        url: `${urlBase}/${filePath}?access_token=${gitToken}`,
         json: true,
         method: 'PUT',
         body: {
@@ -80,7 +84,7 @@ function GitHubFile(ctorOpts) {
           sha: existingFileInfo.sha
         }
       };
-
+      
       if (shouldSetUserAgent) {
         reqOpts.headers = {
           'User-Agent': 'github-file module'
@@ -96,14 +100,16 @@ function GitHubFile(ctorOpts) {
     if (res.statusCode === 404) {
       // No error; there's just no list.
       done(null, []);
-    } else if (res.statusCode === 200) {
+    }
+    else if (res.statusCode === 200) {
       var parsed = JSON.parse(body);
       var result = {
         sha: parsed.sha,
         content: decodeFromBase64(parsed.content)
       };
       done(null, result);
-    } else {
+    }
+    else {
       done(new Error('Unknown error: ' + res.statusCode + ', ' + JSON.stringify(body)));
     }
   }
@@ -112,10 +118,10 @@ function GitHubFile(ctorOpts) {
 function parsePutResponse(res, body, done) {
   if (res.statusCode === 201 || res.statusCode === 200) {
     done();
-  } else {
+  }
+  else {
     done(new Error('Failed to update file: ' + res.statusCode + ', ' + JSON.stringify(body)));
   }
 }
 
 module.exports = GitHubFile;
-
