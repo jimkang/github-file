@@ -1,0 +1,36 @@
+{
+  "name": "github-file",
+  "version": "1.0.0",
+  "description": "A module for updating a file on GitHub via the GitHub API.",
+  "main": "index.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jimkang/github-file.git"
+  },
+  "keywords": [
+    "github",
+    "api"
+  ],
+  "author": "Jim Kang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jimkang/github-file/issues"
+  },
+  "homepage": "https://github.com/jimkang/github-file",
+  "devDependencies": {
+    "assert-no-error": "^1.0.0",
+    "eslint": "^3.6.1",
+    "request": "^2.81.0",
+    "tape": "^4.6.0"
+  },
+  "dependencies": {
+    "async-waterfall": "^0.1.5",
+    "call-next-tick": "^2.0.1",
+    "idmaker": "^0.1.1",
+    "lodash.curry": "^4.1.1",
+    "standard-bail": "^2.0.1"
+  }
+}
