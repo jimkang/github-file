@@ -90,6 +90,14 @@ function GitHubFile(ctorOpts) {
 
       request(reqOpts, sb(parsePutResponse, done));
     }
+
+    function parsePutResponse(res, body, done) {
+      if (res.statusCode === 201 || res.statusCode === 200) {
+        done();
+      } else {
+        done(new Error('Failed to update file: ' + filePath + ', ' + res.statusCode + ', ' + JSON.stringify(body)));
+      }
+    }
   }
 
   function parseGetResponse(res, body, done) {
@@ -106,14 +114,6 @@ function GitHubFile(ctorOpts) {
     } else {
       done(new Error('Unknown error: ' + res.statusCode + ', ' + JSON.stringify(body)));
     }
-  }
-}
-
-function parsePutResponse(res, body, done) {
-  if (res.statusCode === 201 || res.statusCode === 200) {
-    done();
-  } else {
-    done(new Error('Failed to update file: ' + res.statusCode + ', ' + JSON.stringify(body)));
   }
 }
 
