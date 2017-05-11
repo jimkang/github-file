@@ -57,20 +57,21 @@ function GitHubFile(ctorOpts) {
     var filePath;
     var content;
     var message;
+    var parentSha;
 
     if (opts) {
       filePath = opts.filePath;
       content = opts.content;
       message = opts.message;
+      parentSha = opts.parentSha;
     }
 
-    waterfall(
-      [
-        curry(getFile)(filePath),
-        commitUpdate
-      ],
-      updateDone
-    );
+    if (parentSha) {
+      commitUpdate({sha: parentSha}, updateDone);
+    }
+    else {
+      waterfall([curry(getFile)(filePath), commitUpdate], updateDone);
+    }
 
     function commitUpdate(existingFileInfo, done) {
       var reqOpts = {

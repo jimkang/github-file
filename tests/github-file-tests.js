@@ -4,6 +4,7 @@ var test = require('tape');
 var assertNoError = require('assert-no-error');
 var GitHubFile = require('../index');
 var config = require('../test-config');
+var cloneDeep = require('lodash.clonedeep');
 
 var request;
 
@@ -56,6 +57,7 @@ var testCases = [
 
 testCases.forEach(runUpdateTest);
 testCases.forEach(runGetTest);
+testCases.forEach(runUpdateWithSHATest);
 
 function runGetTest(testCase) {
   test('Getting ' + testCase.filePath, getFileTest);
@@ -88,3 +90,25 @@ function runUpdateTest(testCase) {
   }
 }
 
+function runUpdateWithSHATest(testCase) {
+  test('Getting ' + testCase.filePath, updateWithSHATest);
+
+  function updateWithSHATest(t) {
+    var githubFile = GitHubFile(defaultCtorOpts);
+    githubFile.get(testCase.filePath, checkRetrievedFile);
+
+    function checkRetrievedFile(error, result) {
+      assertNoError(t.ok, error, 'No error from getFile.');
+      t.ok(result.sha, 'Result has a SHA.');
+      var updateOpts = cloneDeep(testCase);
+      updateOpts.parentSha = result.sha;
+      updateOpts.content += ' - updated!';
+      githubFile.update(updateOpts, checkResult);
+    }
+
+    function checkResult(error) {
+      assertNoError(t.ok, error, 'No error from updateFile.');
+      t.end();
+    }
+  }
+}
