@@ -102,14 +102,14 @@ function runUpdateWithSHATest(testCase) {
       assertNoError(t.ok, error, 'No error from getFile.');
       t.ok(result.sha, 'Result has a SHA.');
       var updateOpts = cloneDeep(testCase);
-      updateOpts.parentSha = result.sha;
+      updateOpts.sha = result.sha;
       updateOpts.content += ' - updated!';
       githubFile.update(updateOpts, checkResult);
     }
 
-    function checkResult(error, commit) {
+    function checkResult(error, content) {
       assertNoError(t.ok, error, 'No error from updateFile.');
-      t.ok(commit.sha, 'sha is passed.');
+      t.ok(content.sha, 'sha is passed.');
       t.end();
     }
   }

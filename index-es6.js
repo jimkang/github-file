@@ -98,7 +98,7 @@ function GitHubFile(ctorOpts) {
 
     function parsePutResponse(res, body, done) {
       if (res.statusCode === 201 || res.statusCode === 200) {
-        done(null, body.commit);
+        done(null, body.content);
       }
       else {
         done(new Error('Failed to update file: ' + filePath +  ', ' + res.statusCode + ', ' + JSON.stringify(body)));

@@ -34,16 +34,16 @@ Usage
       }
     }
 
-    function logResult(error, file) {
+    function logResult(error, content) {
       if (error) {
         console.log(error);
       }
       else {
-        console.log('File updated! Commit sha:': file.sha);
+        console.log('File updated! Content sha:': content.sha);
       }
     }
 
-`update` has a `parentSha` opt that you can specify. If you do so, it will skip getting the existing file from git in order to get it the parent sha for the update.
+`update` has a `sha` opt that you can specify. If you do so, it will skip getting the existing file from git in order to get it the file sha for the update.
 
 Tests
 -----
