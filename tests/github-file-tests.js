@@ -83,8 +83,9 @@ function runUpdateTest(testCase) {
     var updateFile = GitHubFile(defaultCtorOpts).update;
     updateFile(testCase, checkResult);
 
-    function checkResult(error) {
+    function checkResult(error, commit) {
       assertNoError(t.ok, error, 'No error from updateFile.');
+      t.ok(commit.sha, 'sha is passed.');
       t.end();
     }
   }
@@ -106,8 +107,9 @@ function runUpdateWithSHATest(testCase) {
       githubFile.update(updateOpts, checkResult);
     }
 
-    function checkResult(error) {
+    function checkResult(error, commit) {
       assertNoError(t.ok, error, 'No error from updateFile.');
+      t.ok(commit.sha, 'sha is passed.');
       t.end();
     }
   }
