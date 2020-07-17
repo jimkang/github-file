@@ -38,20 +38,22 @@ function GitHubFile(ctorOpts) {
 
   function getFile(filePath, done) {
     var reqOpts = {
-      url: urlBase + '/' + filePath + '?access_token=' + gitToken,
-      method: 'GET'
+      url: urlBase + '/' + filePath,
+      method: 'GET',
+      headers: {
+        Authorization: 'token ' + gitToken
+      }
     };
     // console.log('Get from:', reqOpts.url);
 
     if (branch) {
-      reqOpts.url += '&ref=' + branch;
+      reqOpts.url += '?ref=' + branch;
     }
 
     if (shouldSetUserAgent) {
-      reqOpts.headers = {
-        'User-Agent': 'github-file module'
-      };
+      setUserAgent(reqOpts);
     }
+    debugger;
     request(reqOpts, sb(parseGetResponse, done));
   }
 
@@ -76,21 +78,26 @@ function GitHubFile(ctorOpts) {
 
     function commitUpdate(existingFileInfo, done) {
       var reqOpts = {
-        url: urlBase + '/' + filePath + '?access_token=' + gitToken,
+        url: urlBase + '/' + filePath,
         json: true,
         method: 'PUT',
+        headers: {
+          Authorization: 'token ' + gitToken,
+          'Content-Type': 'application/json'
+        },
         body: {
           message: message || 'Update from github-file module.',
           content: encodeInBase64(content),
-          branch: branch,
-          sha: existingFileInfo.sha
+          branch: branch
         }
       };
 
+      if (existingFileInfo && existingFileInfo.sha) {
+        reqOpts.body.sha = existingFileInfo.sha;
+      }
+
       if (shouldSetUserAgent) {
-        reqOpts.headers = {
-          'User-Agent': 'github-file module'
-        };
+        setUserAgent(reqOpts);
       }
       // console.log('Commiting update with request:', JSON.stringify(reqOpts, null, '  '));
 
@@ -107,6 +114,7 @@ function GitHubFile(ctorOpts) {
   }
 
   function parseGetResponse(res, body, done) {
+    debugger;
     if (res.statusCode === 404) {
       // No error; there's just no list.
       done(null, []);
@@ -121,6 +129,10 @@ function GitHubFile(ctorOpts) {
       done(new Error('Unknown error: ' + res.statusCode + ', ' + JSON.stringify(body)));
     }
   }
+}
+
+function setUserAgent(reqOpts) {
+  reqOpts.headers['User-Agent'] = 'github-file module';
 }
 
 module.exports = GitHubFile;
