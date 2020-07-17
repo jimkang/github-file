@@ -53,7 +53,6 @@ function GitHubFile(ctorOpts) {
     if (shouldSetUserAgent) {
       setUserAgent(reqOpts);
     }
-    debugger;
     request(reqOpts, sb(parseGetResponse, done));
   }
 
@@ -114,7 +113,6 @@ function GitHubFile(ctorOpts) {
   }
 
   function parseGetResponse(res, body, done) {
-    debugger;
     if (res.statusCode === 404) {
       // No error; there's just no list.
       done(null, []);
